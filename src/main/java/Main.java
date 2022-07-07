@@ -6,6 +6,6 @@ public class Main {
         String DATA_DIRECTORY = "D:\\tomcat_test\\src\\main\\java\\data";
         File dir = new File(DATA_DIRECTORY);
         String[] filenames = dir.list();
-        new App().run(filenames.length,filenames);
+        new App().run(filenames);
     }
 }
