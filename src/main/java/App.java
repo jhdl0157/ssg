@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class App {
     private static final String FILE_PATH="D:\\tomcat_test\\src\\main\\java\\data\\";
@@ -13,16 +10,15 @@ public class App {
         init(files);
         System.out.println("== 명언 SSG ==");
         Scanner sc = new Scanner(System.in);
-
+        String ids;
         outer:
         while (true) {
             System.out.printf("명령) ");
             String cmd = sc.nextLine().trim();
-
             switch (cmd) {
                 case "등록":
                     Post post=new Post();
-                    System.out.printf("명연 : ");
+                    System.out.printf("명언 : ");
                     post.setContent(sc.nextLine().trim());
                     System.out.printf("작가 : ");
                     post.setAuthor(sc.nextLine().trim());
@@ -31,13 +27,37 @@ public class App {
                     File file = new File(FILE_PATH+fileLens+".json");
                     fileWrite(file,post);
                     System.out.println(fileLens+"번 명언이 등록되었습니다.");
+                    postArrayList.add(post);
                     break ;
 
                 case "목록":
                     System.out.println("번호 / 작가 / 명언");
                     System.out.println("----------------------");
+                    postArrayList.stream()
+                            .sorted(Comparator.comparing(Post::getId).reversed())
+                            .forEach(x-> System.out.println(x.getId()+" /  "+x.getAuthor()+"  /  "+x.getContent()));
                     break;
-                case "종료":
+
+                case "삭제":
+                    boolean flag=false;
+                    String sw=sc.nextLine().trim();
+                    System.out.println(sw);
+                    int index=Integer.parseInt(sw.replace("?id=","").trim());
+                    for(Post p:postArrayList){
+                        if(p.getId()==index){
+                            flag=true;
+                            postArrayList.remove(p);
+                            File file1=new File(FILE_PATH+index+".json");
+                            if(file1.delete()){
+                                System.out.println("파일 삭제완료");
+                            }
+                            break ;
+                        }
+                    }
+                    System.out.println(flag? index+"번 명언이 삭제되었습니다.":index+"번 명언은 존재하지 않습니다.");
+                    break ;
+
+                    case "종료":
                     break outer;
             }
         }
@@ -57,6 +77,9 @@ public class App {
     }
     void init(String[] files){
         postArrayList=new ArrayList<>();
+        if(files.length==0){
+            return;
+        }
         for(String s:files){
             try {
                 String filePath = FILE_PATH+s;
@@ -68,20 +91,14 @@ public class App {
                 String str=result.replace("{","").replace("}","")
                         .replace("\"id\" : ","").replace("\"content\" : ","")
                         .replace("\"author\" : ","").replaceAll("\"","");
-                //System.out.println(str);
                 String[] ars=str.split(",");
-                for(String s1 : ars){
-                    System.out.println(s1);
-                }
-                int index=Integer.parseInt(ars[0]);
-                Post posts=new Post(index,ars[1],ars[2]);
-
-                System.out.println("ars[2]:"+ars[2]);
-
-                System.out.println(posts.getAuthor());
-                fileStream.close(); //스트림 닫기
+                int index=Integer.parseInt(ars[0].trim());
+                Post posts=new Post(index,ars[1].trim(),ars[2].trim());
+                //System.out.println("sad"+posts.getAuthor());
+                postArrayList.add(posts);
+                fileStream.close();
             } catch (Exception e) {
-                e.getStackTrace();
+                e.printStackTrace();
             }
         }
     }
