@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class App {
-    private static final String FILE_PATH="D:\\tomcat_test\\src\\main\\java\\data\\";
+    private static final String FILE_PATH="/Users/jaeho/Desktop/ssg/src/main/java/data/";
     private static ArrayList<Post> postArrayList;
     private static String inputindex;
     static int fileLens;
