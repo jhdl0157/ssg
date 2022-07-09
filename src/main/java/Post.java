@@ -5,7 +5,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Post {
-    private int id;
+    private Integer id;
     private String content;
     private String author;
 
