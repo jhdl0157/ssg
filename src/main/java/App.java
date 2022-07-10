@@ -1,27 +1,27 @@
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class App {
-    private static final String FILE_PATH = "/Users/jaeho/Desktop/ssg/src/main/java/data/";
+    static String FILE_PATH = FileUrl.WINDOW.getUrl();
+    static String FILE_DIR_URL =FileUrl.WINDOW.getUrl()+"\\";
     private static final String INIT_MSG = "== 명언 SSG ==";
     private static ArrayList<Post> postArrayList;
     private static String inputindex;
     private static int ids;
     static int fileLens;
 
-    public void run(String[] files) {
+    public void run() {
+        File dir = new File(FILE_PATH);
+        String[] files = dir.list();
         init(files);
         fileLens = getMaxNumberFileName(files);
-        System.out.println(fileLens);
         System.out.println(INIT_MSG);
         Scanner sc = new Scanner(System.in);
         outer:
         while (true) {
             System.out.print("명령) ");
             String cmd = sc.nextLine().trim();
-            //Command command = Command.getCommand(cmd);
-            cmd = fixParsing(cmd);
+            cmd = fixOrDeleteCommandParsing(cmd);
             switch (cmd) {
                 case "등록":
                     Post post = new Post();
@@ -31,7 +31,7 @@ public class App {
                     post.setAuthor(sc.nextLine().trim());
                     fileLens++;
                     post.setId(fileLens);
-                    File file = new File(FILE_PATH + fileLens + ".json");
+                    File file = new File(FILE_DIR_URL + fileLens + ".json");
                     fileWrite(file, post);
                     System.out.println(fileLens + "번 명언이 등록되었습니다.");
                     postArrayList.add(post);
@@ -47,31 +47,30 @@ public class App {
                     break;
 
                 case "삭제":
-                    inputindex = sc.nextLine().trim();
-                    System.out.print(inputindex);
-                    int index = Integer.parseInt(inputindex.replace("?id=", "").trim());
-                    System.out.println(fileDelete(index) ? index + "번 명언이 삭제되었습니다." : index + "번 명언은 존재하지 않습니다.");
+                    System.out.println("삭제 진입 ids = "+ids);
+                    System.out.println(fileDelete(ids,files) ? ids + "번 명언이 삭제되었습니다." : ids + "번 명언은 존재하지 않습니다.");
                     break;
 
                 case "종료":
                     break outer;
 
                 case "수정":
-                    Post fixPost = postArrayList.stream()
+                    System.out.println("수정 진입 ids = "+ids);
+                    Optional<Post> fixPost = postArrayList.stream()
                             .filter(x -> x.getId().equals(ids))
-                            .findFirst().orElseThrow(() -> new NotFoundException(ids + "번 명언은 존재하지 않습니다."));
-                    System.out.println("기존 명언 : " + fixPost.getContent());
+                            .findFirst();
+                    System.out.println("기존 명언 : " + fixPost.get().getContent());
                     System.out.print("새로운 명언 : ");
                     String newContent = sc.nextLine().trim();
                     System.out.println(newContent);
-                    Post fixPosts = new Post(fixPost.getId(), newContent, fixPost.getAuthor());
-                    if (!fileDelete(ids)) {
+                    Post fixPosts = new Post(fixPost.get().getId(), newContent, fixPost.get().getAuthor());
+                    if (!fileDelete(ids,files)) {
                         System.out.println(ids + "번 명언은 존재하지 않습니다.");
                         break;
                     }
                     File file1 = new File(FILE_PATH + fileLens + ".json");
                     fileWrite(file1, fixPosts);
-                    System.out.println(fixPost.getId() + "번 명언이 수정되었습니다.");
+                    System.out.println(fixPost.get().getId() + "번 명언이 수정되었습니다.");
                     postArrayList.add(fixPosts);
                     break;
             }
@@ -79,10 +78,16 @@ public class App {
         sc.close();
     }
 
-    String fixParsing(String input) {
+    String fixOrDeleteCommandParsing(String input) {
         if (input.contains("수정?id=")) {
             ids = Integer.parseInt(input.replace("수정?id=", "").trim());
             input = "수정";
+            return input;
+        }
+        if (input.contains("삭제?id=")) {
+            ids = Integer.parseInt(input.replace("삭제?id=", "").trim());
+            input = "삭제";
+            return input;
         }
         return input;
     }
@@ -95,11 +100,17 @@ public class App {
         return input;
     }
 
-    Boolean fileDelete(int index) {
-        System.out.println("fileDelete 진입 num :" + fileLens);
+    Boolean fileDelete(int index,String[] files) {
+        System.out.println("fileDelete 진입 index :" + index);
+        System.out.println("fileDelete 진입 FileLen :" + index);
+        System.out.println("삭제하는 파일 명은 "+findByIndexId(files,index)+".json");
         if (postArrayList.removeIf(post -> post.getId().equals(index))) {
-            File file1 = new File(FILE_PATH + index + ".json");
-            if (file1.delete()) {
+            File file1 = new File(FILE_DIR_URL + findByIndexId(files, index) + ".json");
+            File fact=new File("D:\\SSG\\src\\main\\java\\data\\4.json");
+            if(fact.exists()){
+                System.out.println("파일은 존재함 ");
+            }
+            if (fact.delete()) {
                 System.out.println("파일 삭제완료");
                 return true;
             }
@@ -135,14 +146,13 @@ public class App {
         if (files.length == 0) {
             return;
         }
-        for (String s : files) {
+        for (String file : files) {
             try {
-                String filePath = FILE_PATH + s;
+                String filePath = FILE_DIR_URL + file;
                 FileInputStream fileStream = null;
                 fileStream = new FileInputStream(filePath);
                 byte[] readBuffer = new byte[fileStream.available()];
-                while (fileStream.read(readBuffer) != -1) {
-                }
+                while (fileStream.read(readBuffer) != -1) {}
                 String result = new String(readBuffer);
                 String str = jsonToString(result);
                 String[] ars = str.split(",");
@@ -159,7 +169,7 @@ public class App {
     int findByIndexId(String[] files, int index) {
         for (String s : files) {
             try {
-                String filePath = FILE_PATH + s;
+                String filePath = FILE_DIR_URL + s;
                 FileInputStream fileStream = null;
                 fileStream = new FileInputStream(filePath);
                 byte[] readBuffer = new byte[fileStream.available()];
@@ -168,7 +178,7 @@ public class App {
                 String result = new String(readBuffer);
                 String str = jsonToString(result);
                 String[] ars = str.split(",");
-                if (Integer.parseInt(ars[0]) == index) {
+                if (Integer.parseInt(ars[0].trim()) == index) {
                     return Integer.parseInt(s.replace(".json", "").trim());
                 }
                 fileStream.close();
