@@ -7,9 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="tomcat_test" />
-        <module name="ssg" />
-        <module name="SSG" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tomcat_test" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
