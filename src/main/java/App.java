@@ -10,7 +10,6 @@ public class App {
     static String FILE_DIR_URL = "D:\\SSG\\src\\main\\java\\data\\";
     private static final String INIT_MSG = "== 명언 SSG ==";
     private static CopyOnWriteArrayList<Post> postArrayList;
-    private static String inputindex;
     private static int ids;
     static int fileLens;
 
@@ -110,13 +109,6 @@ public class App {
                     e.printStackTrace();
                     return false;
                 }
-//                if (file.exists()) {
-//                    System.out.println("파일 존재함");
-//                    if (file.delete()) {
-//                        System.out.println("파일을 삭제했습니다!");
-//                        return true;
-//                    }
-//                }
             }
         }
         return false;
