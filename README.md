@@ -1,6 +1,6 @@
 ## 만들면서 겪은 문제
 File class에서 file.delete()는 예외를 던져주지 않아서 실패를 하였을때 자세한 정보를 얻기 힘들다.
-java.nio.file에 있는 Files.delete(Path ..)를 해주면 예외를 반환을 해주어서 실패 원인을 정확하게 파악할수 있다.
+<p>java.nio.file에 있는 Files.delete(Path ..)를 해주면 예외를 반환을 해주어서 실패 원인을 정확하게 파악할수 있다.
 
 ```java
 try {
