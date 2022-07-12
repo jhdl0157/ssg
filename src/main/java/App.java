@@ -37,11 +37,30 @@ public class App {
                 case "수정":
                     fixPost();
                     break;
+                case "빌드":
+                    buildPost();
+                    break;
                 case "종료":
                     break outer;
             }
         }
         sc.close();
+    }
+
+    private void buildPost() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("[ \n ");
+        for(int i=0;i<postArrayList.size();i++){
+            sb.append(postArrayList.get(i).toString());
+            if(i<postArrayList.size()-1) {
+                sb.append(",");
+                sb.append("\n");
+                }
+        }
+        sb.append("\n]");
+        System.out.println(sb);
+        File dataJson=new File("/Users/jaeho/Desktop/ssg/src/main/java/data.json");
+        fileWrite(dataJson,sb.toString());
     }
 
     void regist() {
@@ -118,7 +137,6 @@ public class App {
         for (Post post : postArrayList) {
             if (post.getId() == index) {
                 postArrayList.remove(post);
-                //File file = new File(FILE_DIR_URL + findByIndexId(files, index) + ".json");
                 Path path = Paths.get(FILE_DIR_URL + findByIndexId(files, index) + ".json");
                 try {
                     Files.delete(path);
@@ -160,6 +178,18 @@ public class App {
             e.printStackTrace();
         }
     }
+    void fileWrite(File file, String result) {
+        System.out.println("fileWrite 진입 num :" + fileLens);
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.print(result);
+            fileWriter.close();
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     void init(String[] files) {
         System.out.println("파일에서 자료 불러오는중...");
@@ -183,12 +213,12 @@ public class App {
                 postArrayList.add(posts);
                 fileStream.close();
                 System.out.println("파일"+file+" 불러오기 완료!!");
-                System.out.println(INIT_MSG);
                 fileLens = getMaxNumberFileName(getFileList());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        System.out.println(INIT_MSG);
     }
 
     int findByIndexId(final String[] files, final int index) {

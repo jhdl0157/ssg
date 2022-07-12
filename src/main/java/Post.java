@@ -21,9 +21,9 @@ public class Post {
     @Override
     public String toString() {
         return "{\n" +
-                "\"id\" : " +"\""+ id + "\",\n" +
-                "\"content\" : " +"\""+ content + "\",\n" +
-                "\"author\" : " +"\""+ author + "\" \n"+
+                " \"id\" : " +"\""+ id + "\",\n" +
+                " \"content\" : " +"\""+ content + "\",\n" +
+                " \"author\" : " +"\""+ author + "\" \n"+
                 '}';
     }
 }
