@@ -85,7 +85,7 @@ public class App {
         post.setAuthor(sc.nextLine().trim());
         fileLens++;
         post.setId(fileLens);
-        post.setImageUrl("https://pbs.twimg.com/media/D-VEwpHXYAA_ydF?format=png&name=900x900");
+        post.setImageUrl("https://pbs.twimg.com/media/D-VEyO0WkAAhfhQ?format=jpg&name=900x900");
         File file = new File(FILE_DIR_URL + fileLens + ".json");
         fileWrite(file, post);
         System.out.println(fileLens + "번 명언이 등록되었습니다.");

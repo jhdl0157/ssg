@@ -1,14 +1,14 @@
 [ 
  {
- "id" : "3",
- "content" : "123123",
- "author" : "작각",
- "imageUrl" : "https://pbs.twimg.com/media/D-VEwpHXYAA_ydF?format=png&name=900x900" 
+ "id" : "1",
+ "content" : "내일은 월요일",
+ "author" : "회사원",
+ "imageUrl" : "https://pbs.twimg.com/media/D-VEyO0WkAAhfhQ?format=jpg&name=900x900" 
 },
 {
- "id" : "4",
- "content" : "2222",
- "author" : "작가2",
- "imageUrl" : "https://pbs.twimg.com/media/D-VEwpHXYAA_ydF?format=png&name=900x900" 
+ "id" : "2",
+ "content" : "그만좀 먹어",
+ "author" : "징징이",
+ "imageUrl" : "https://pbs.twimg.com/media/D-VEyO0WkAAhfhQ?format=jpg&name=900x900" 
 }
 ]
