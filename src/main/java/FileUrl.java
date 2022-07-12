@@ -7,4 +7,6 @@ public enum FileUrl {
     public String getUrl(){
         return url;
     }
+    public String getMacDirUrl(){return url+"/";}
+    public String getWindowDirUrl(){return url+"\\";}
 }
